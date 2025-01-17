@@ -6,16 +6,9 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   </head>
   <body>
-    <pre class="mermaid">
-      flowchart LR
-          A-->B
-          B-->C
-          C-->D
-          click A callback "Tooltip for A"
-          click B "https://www.github.com" "This is a link to GitHub"
-          click C call callback() "Tooltip for C"
-          click D href "https://www.github.com" "This is another link to GitHub"
-    </pre>
+    <h1>Load Flowchart from mermaid.json</h1>
+    <input type="file" id="jsonFileInput" accept=".json" />
+    <div id="flowchart"></div>
 
     <script>
       // Define the callback function
@@ -36,6 +29,36 @@
 
       // Initialize Mermaid with the configuration
       mermaid.initialize(config);
+
+      // Handle file upload
+      document
+        .getElementById("jsonFileInput")
+        .addEventListener("change", function (event) {
+          const file = event.target.files[0];
+          if (file && file.name === "mermaid.json") {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const data = JSON.parse(e.target.result);
+              renderFlowchart(data);
+            };
+            reader.readAsText(file);
+          } else {
+            alert("Please select a file named 'mermaid.json'.");
+          }
+        });
+
+      // Render the flowchart using Mermaid
+      function renderFlowchart(data) {
+        // Example: Use the JSON data to generate a flowchart
+        const flowchartDefinition = data.flowchartDefinition; // Assuming the JSON contains a "flowchartDefinition" key
+
+        // Insert the flowchart definition into the page
+        const flowchartDiv = document.getElementById("flowchart");
+        flowchartDiv.innerHTML = `<pre class="mermaid">${flowchartDefinition}</pre>`;
+
+        // Trigger Mermaid to render the flowchart
+        mermaid.init();
+      }
     </script>
   </body>
 </html>
