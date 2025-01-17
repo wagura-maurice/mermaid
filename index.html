@@ -40,10 +40,16 @@
             const reader = new FileReader();
             reader.onload = function (e) {
               try {
-                const data = JSON.parse(e.target.result);
+                // Remove comments from the JSON file
+                const jsonWithoutComments = e.target.result.replace(
+                  /\/\/.*|\/\*[\s\S]*?\*\//g,
+                  ""
+                );
+                const data = JSON.parse(jsonWithoutComments);
                 renderFlowchart(data);
               } catch (error) {
                 alert("Invalid JSON file. Please upload a valid JSON file.");
+                console.error("Error parsing JSON:", error);
               }
             };
             reader.readAsText(file);
