@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   </head>
   <body>
-    <h1>Load Flowchart from mermaid.json</h1>
+    <h1>Load Flowchart from JSON File</h1>
     <input type="file" id="jsonFileInput" accept=".json" />
     <div id="flowchart"></div>
 
@@ -35,29 +36,38 @@
         .getElementById("jsonFileInput")
         .addEventListener("change", function (event) {
           const file = event.target.files[0];
-          if (file && file.name === "mermaid.json") {
+          if (file && file.name.endsWith(".json")) {
             const reader = new FileReader();
             reader.onload = function (e) {
-              const data = JSON.parse(e.target.result);
-              renderFlowchart(data);
+              try {
+                const data = JSON.parse(e.target.result);
+                renderFlowchart(data);
+              } catch (error) {
+                alert("Invalid JSON file. Please upload a valid JSON file.");
+              }
             };
             reader.readAsText(file);
           } else {
-            alert("Please select a file named 'mermaid.json'.");
+            alert("Please select a valid JSON file.");
           }
         });
 
       // Render the flowchart using Mermaid
       function renderFlowchart(data) {
-        // Example: Use the JSON data to generate a flowchart
-        const flowchartDefinition = data.flowchartDefinition; // Assuming the JSON contains a "flowchartDefinition" key
+        // Check if the JSON is an array and has at least one entry
+        if (Array.isArray(data) && data.length > 0) {
+          // Extract the first entry's "code" property
+          const flowchartDefinition = data[0].state.code;
 
-        // Insert the flowchart definition into the page
-        const flowchartDiv = document.getElementById("flowchart");
-        flowchartDiv.innerHTML = `<pre class="mermaid">${flowchartDefinition}</pre>`;
+          // Insert the flowchart definition into the page
+          const flowchartDiv = document.getElementById("flowchart");
+          flowchartDiv.innerHTML = `<pre class="mermaid">${flowchartDefinition}</pre>`;
 
-        // Trigger Mermaid to render the flowchart
-        mermaid.init();
+          // Trigger Mermaid to render the flowchart
+          mermaid.init();
+        } else {
+          alert("The JSON file does not contain valid flowchart data.");
+        }
       }
     </script>
   </body>
