@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Interactive Flowchart with Mermaid.js</title>
+    <!-- Include Mermaid.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  </head>
+  <body>
+    <pre class="mermaid">
+      flowchart LR
+          A-->B
+          B-->C
+          C-->D
+          click A callback "Tooltip for A"
+          click B "https://www.github.com" "This is a link to GitHub"
+          click C call callback() "Tooltip for C"
+          click D href "https://www.github.com" "This is another link to GitHub"
+    </pre>
+
+    <script>
+      // Define the callback function
+      window.callback = function () {
+        alert("A callback was triggered!");
+      };
+
+      // Mermaid configuration
+      const config = {
+        startOnLoad: true, // Automatically render the flowchart on page load
+        flowchart: {
+          useMaxWidth: true, // Use maximum width for the flowchart
+          htmlLabels: true, // Use HTML labels
+          curve: "cardinal", // Use cardinal curves for arrows
+        },
+        securityLevel: "loose", // Allow JavaScript and external links
+      };
+
+      // Initialize Mermaid with the configuration
+      mermaid.initialize(config);
+    </script>
+  </body>
+</html>
